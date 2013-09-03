@@ -1,0 +1,107 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:composition template="templates/commonTemplate.xhtml">
+<h:head>
+	<f:metadata>
+		<f:event listener="#{loginBean.requiredLoggedOut}" type="preRenderView"/>
+	</f:metadata>
+</h:head>
+    	<ui:define name="content">
+
+			<div class="container">
+	  			<h:form id="registrateForm" class="form-common form-horizontal form-registrate" >
+					<fieldset>
+						<legend>
+							Registration 
+							<h:link styleClass="pull-right" outcome="login" value="#{controls.singinBtn}" />
+						</legend>
+	  					<h:panelGroup layout="block" rendered="#{registrationBean.registrationSuccess == false}"> 
+			  				<div class="control-group">	
+			  					<h:outputLabel for="emailField" value="#{controls.email}" class="control-label"/>
+			  					<div class="controls">
+	    	 		  				<h:inputText id="emailField" value="#{registrationBean.email}" class="input-block-level" required="true" 
+	    	 		  				requiredMessage="#{msgs.emailReq}" validatorMessage="#{msgs.emailValid}">
+	    	 		  					<f:validateRegex pattern="([\w]+([._-]?[\w])*)+@([\w]+([.-]?[\w])*)+.[a-zA-Z]{2,}" />
+	    	 		  					<f:validateLength minimum="6" maximum="32"/>
+	    	 		  				</h:inputText>
+	    	 		  			
+	     			  			</div>
+	     		  				<div id="emailMessage" class="alert alert-error" name = "errorMessage">
+									<h:message for="emailField" />
+								</div>
+	     		  		
+	     		  				<h:outputLabel for="nameField" value="#{controls.name}" class="control-label"/>
+	     		  				<div class="controls">
+	        						<h:inputText id="nameField" value="#{registrationBean.name}" class="input-block-level" required="true" 
+	        						requiredMessage="#{msgs.nameReq}" validatorMessage="#{msgs.nameValid}">
+	        							<f:validateRegex pattern="[\wа-яёА-ЯЁ]{2,}" />
+	    	 		  					<f:validateLength minimum="2" maximum="16"/>
+	        						</h:inputText>
+	        					</div>
+	        					<div id="nameMessage" class="alert alert-error" name = "errorMessage">
+									<h:message for="nameField" />
+								</div>
+								<h:panelGroup id="passwords">
+									<f:event listener="#{registrationBean.confirmPasswords}" type="postValidate"/>
+									<h:outputLabel for="passwordField" value="#{controls.password}" class="control-label"/>
+		     		  				<div class="controls">
+		        						<h:inputSecret id="passwordField" value="#{registrationBean.password}" class="input-block-level" required="true"
+		        						 requiredMessage="#{msgs.passReq}" validatorMessage="#{msgs.passValid}">
+		        						 	<f:validateRegex pattern="[\S]{4,}" />
+		    	 		  					<f:validateLength minimum="4" maximum="32"/>
+		        						</h:inputSecret>
+		        					</div>
+		        					<div id="passwordMessage" class="alert alert-error" name = "errorMessage">
+										<h:message for="passwordField" />
+									</div>
+									
+									<h:outputLabel for="confirmField" value="#{controls.confirm}" class="control-label"/>
+		     		  				<div class="controls">
+		        						<h:inputSecret id="confirmField" value="#{registrationBean.confirm}" class="input-block-level" required="true"
+		        						 requiredMessage="#{msgs.confirmReq}" validatorMessage="#{msgs.passValid}">
+		        							<f:validateRegex pattern="[\S]{4,}" />
+		    	 		  				<f:validateLength minimum="4" maximum="32"/>
+		        						</h:inputSecret>
+		        					</div>
+		        					<div id="confirmMessage" class="alert alert-error" name = "errorMessage">
+										<h:message for="confirmField" />
+									</div>
+								</h:panelGroup>
+								<div id="matchingMessage" class="alert alert-error" name = "errorMessage">
+										<h:message for="passwords" />
+								</div>
+								
+	        				</div>
+	        				<h:commandButton id="registrateBtn" action="#{registrationBean.registrate}" class="btn btn-primary" value="#{controls.registrate}"/>
+	        				
+							<br/><br/>
+							<div id="registrateMessage" class="alert alert-error" name = "errorMessage" >
+								<h:message for="registrateBtn" />
+							</div>
+						</h:panelGroup>
+						<h:panelGroup layout="block" rendered="#{registrationBean.registrationSuccess == true}" >
+							<div class="alert alert-success">
+								<h4>Congratulations!</h4>
+								
+							</div>
+							<div >
+								User <b><h:outputText value="#{registrationBean.name}" styleClass="text-success"/></b> was successfully registrated.
+								<br/><br/>
+								Use email <b><h:outputText value="#{registrationBean.email}" styleClass="text-success"/></b> to <b><h:link outcome="login">login</h:link></b>.
+							</div>
+							
+						</h:panelGroup>	
+					</fieldset>
+				</h:form>
+					
+			</div>
+    	</ui:define>
+</ui:composition>
+</html>

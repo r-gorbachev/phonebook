@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+	
+<h:head>
+	
+	<h:outputStylesheet name="bootstrap.css" library="css" />
+	<h:outputStylesheet name="bootstrap-responsive.css" library="css" />
+	<h:outputStylesheet name="forms.css" library="css" />
+	
+	<h:outputScript library="js" name="tools.js" target="body" />
+	<h:outputScript library="js" name="hideMessages.js" target="body" />
+	<h:outputScript library="js" name="jquery.js" target="head" />
+	<h:outputScript library="js" name="bootstrap.js" />
+	
+
+</h:head>
+<h:body>
+	    	
+
+	<div id="header" class="navbar navbar-inverse navbar-fixed-top">
+		<ui:insert name="header" >
+			<ui:include src="/templates/commonHeader.xhtml" />
+		</ui:insert>
+    </div>
+	<br/>
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<div class="span2">
+				
+				<div id="menu" class="well ">
+  					<ui:insert name="menu" >
+ 	  					<ui:include src="/templates/commonMenu.xhtml" />
+   					</ui:insert>
+   				</div>
+   				
+ 	  		</div>
+
+   			<div class="span10">
+   				<div id="content">
+  					<ui:insert name="content" >
+ 	  					<ui:include src="/templates/commonContent.xhtml" />
+   					</ui:insert>
+   				</div>
+   			</div>
+ 		</div>
+ 	</div>
+ 	
+    <div id="footer" class="navbar navbar-fixed-bottom">
+    	<ui:insert name="footer" >
+    		<ui:include src="/templates/commonFooter.xhtml" />
+    	</ui:insert>
+	</div>
+	
+</h:body>
+</html>

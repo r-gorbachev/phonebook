@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui" >
+ 
+<ui:composition template="templates/mainTemplate.xhtml">
+    <h:head>
+    	<f:metadata>
+ 			<f:event listener="#{loginBean.requiredAdmin}" type="preRenderView"/>
+ 		</f:metadata>
+    </h:head>
+	<ui:define name="content">				
+	  			<h:form id="addEmployeeForm" class="form-horizontal employee-form" >  				
+					<fieldset>
+						<legend>
+							#{controls.addNewEmployee}
+						</legend>
+						<h:panelGroup rendered="#{addEmployeeBean.addingSuccess}" layout="block" styleClass="alert alert-success">
+							<h:message for="addEmployeeForm" id="formError"/>
+						</h:panelGroup>					
+	  						<div class="control-group">	
+			  					<h:outputLabel for="lastName" value="#{controls.lastName}" class="control-label left2"/>
+			  					<div class="controls controls-long2">
+	    	 		  				<h:inputText id="lastName" value="#{addEmployeeBean.employee.lastName}" validator="#{addEmployeeBean.employee.validateLastName}"
+	    	 		  				required="true" requiredMessage="#{msgs.lastNameReq}">
+	    	 		  					<f:ajax event="keyup" render="lastNameError" onevent="hideIfEmpty"/>
+	    	 		  				</h:inputText>
+	     			  			</div>
+	     			  		</div>
+	     			  		<div id="lastNameMessage" class="alert alert-error error-medium" name = "errorMessage">
+								<h:message for="lastName" id="lastNameError" />
+							</div>
+							
+	     			  		<div class="control-group">
+	     		  				<h:outputLabel for="firstName" value="#{controls.firstName}" class="control-label left2"/>
+	     		  				<div class="controls controls-long2">
+	        						<h:inputText id="firstName" value="#{addEmployeeBean.employee.firstName}" validator="#{addEmployeeBean.employee.validateFirstName}"
+	        						required="true" requiredMessage="#{msgs.firstNameReq}">
+	        							<f:ajax event="keyup" render="firstNameError" onevent="hideIfEmpty"/>
+	        						</h:inputText>
+	        					</div>
+	        				</div>
+							<div id="firstNameMessage" class="alert alert-error error-medium" name = "errorMessage">
+								<h:message for="firstName" id="firstNameError"/>
+							</div>
+
+
+	        				<div class="control-group">
+								<h:outputLabel for="middleName" value="#{controls.middleName}" class="control-label left2"/>
+	     		  				<div class="controls controls-long2">
+	        						<h:inputText id="middleName" value="#{addEmployeeBean.employee.middleName}" validator="#{addEmployeeBean.employee.validateMiddleName}"
+	        						required="true" requiredMessage="#{msgs.middleNameReq}">
+	        							<f:ajax event="keyup" render="middleNameError" onevent="hideIfEmpty"/>
+	        						</h:inputText>
+	        					</div>
+	        				</div>
+	        				<div id="middleNameMessage" class="alert alert-error error-medium" name = "errorMessage">
+								<h:message for="middleName" id="middleNameError"/>
+							</div>
+							
+							
+							<div class="control-group">	
+								<h:outputLabel for="room" value="#{controls.room}" class="control-label left2"/>
+	     		  				<div class="controls controls-long2">
+	        						<h:inputText id="room" value="#{addEmployeeBean.employee.room.number}" validator="#{addEmployeeBean.employee.validateRoom}"
+	        						required="true" requiredMessage="#{msgs.roomReq}" converterMessage="#{msgs.roomValid}">
+	        							<f:ajax event="keyup" render="roomError" onevent="hideIfEmpty"/>
+	        						</h:inputText>
+	        					</div>
+	        				</div>
+	        				<div id="roomMessage" class="alert alert-error error-medium" name = "errorMessage">
+								<h:message for="room" id="roomError" />
+							</div>
+							
+							
+							<div class="control-group">	
+								<h:outputLabel for="phone" value="#{controls.phone}" class="control-label left2"/>
+	     		  				<div class="controls controls-long2">
+	        						<h:inputText id="phone" value="#{addEmployeeBean.employee.phone}" validator="#{addEmployeeBean.employee.validatePhone}"
+	        						required="true" requiredMessage="#{msgs.phoneReq}" converterMessage="#{msgs.phoneValid}">
+	        							<f:ajax event="keyup" render="phoneError" onevent="hideIfEmpty"/>
+	        						</h:inputText>
+	        					</div>							
+	        				</div>
+	        				<div id="phoneMessage" class="alert alert-error error-medium" name = "errorMessage">
+									<h:message for="phone" id="phoneError"/>
+							</div>
+							
+							
+	        				<h:commandButton id="addBtn" action="#{addEmployeeBean.addEmployee}" class="btn" value="#{controls.addnew}">
+	        					<f:ajax execute="@form" render="@form" onevent="hideIfEmpty"/>
+	        				</h:commandButton>
+	        				
+							<br/><br/>
+							<div id="addMessage" class="alert alert-error error-medium" name = "errorMessage" >
+								<h:message for="addBtn"  />
+							</div>							
+						
+					</fieldset>
+					
+				</h:form>
+	  		
+	</ui:define>
+ 
+</ui:composition>
+
+</html>

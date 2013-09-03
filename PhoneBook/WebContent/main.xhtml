@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui" >
+ 
+<ui:composition template="templates/mainTemplate.xhtml">
+    <h:head>
+    	<f:metadata>
+ 			<f:event listener="#{loginBean.requiredLoggedIn}" type="preRenderView"></f:event>
+ 		</f:metadata>
+    </h:head>
+	<ui:define name="content">
+				
+
+		<h:form id="employeesTableForm" class="form-horizontal">
+        	<h:messages  id="messages" class="alert alert-error error-list" name="errorMessage"/>
+			<p:dataTable id="employeeTable" var="employee" value="#{employeesTableBean.employeesModel.employees}"
+                 paginator="true" rows="10"
+                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                 rowsPerPageTemplate="10,15,20" editable="#{loginBean.user.role.name == 'admin'}" editingRow="">
+				
+				<p:ajax event="rowEdit" listener="#{employeesTableBean.onEdit}" update=":employeesTableForm:messages" />  
+        		<p:ajax event="rowEditCancel" listener="#{employeesTableBean.onCancel}" update=":employeesTableForm:messages" />            
+                 
+                <f:facet name="header">
+           			#{controls.employeeCards}
+          		</f:facet>
+
+        		<p:column sortBy="#{employeesTableBean.employeesModel.getEmployeeSerialNumber(employee)}">
+            		<f:facet name="header">
+                		<h:outputText value="№" />
+            		</f:facet>
+            		<h:outputText value="#{employeesTableBean.employeesModel.getEmployeeSerialNumber(employee)}" />
+        		</p:column>
+				
+				
+				<p:column sortBy="#{employee.lastName}" headerText="#{controls.lastName}">
+					<p:cellEditor>
+	            		<f:facet name="output">
+	            			<h:outputText value="#{employee.lastName}" />
+	            		</f:facet>
+	            		<f:facet name="input"> 
+	            			<p:inputText  value="#{employee.lastName}" styleClass="table-edit" validator="#{employee.validateLastName}">
+	            				
+	            			</p:inputText>
+	            				
+	            		</f:facet>
+	            		
+            		</p:cellEditor>
+        		</p:column>
+
+       			<p:column sortBy="#{employee.firstName}" headerText="#{controls.firstName}">
+					<p:cellEditor>
+	            		<f:facet name="output">
+	            			<h:outputText value="#{employee.firstName}" />
+	            		</f:facet>
+	            		<f:facet name="input"> 
+	            			<p:inputText value="#{employee.firstName}" styleClass="table-edit" validator="#{employee.validateFirstName}">
+	            				
+	            			</p:inputText>
+	            		</f:facet>
+            		</p:cellEditor>
+        		</p:column>
+
+
+       			<p:column sortBy="#{employee.middleName}" headerText="#{controls.middleName}">
+					<p:cellEditor>
+	            		<f:facet name="output">
+	            			<h:outputText value="#{employee.middleName}"  />
+	            		</f:facet>
+	            		<f:facet name="input"> 
+	            			<p:inputText value="#{employee.middleName}" styleClass="table-edit" validator="#{employee.validateMiddleName}">
+	            				
+	            			</p:inputText>
+	            		</f:facet>
+            		</p:cellEditor>
+        		</p:column>
+				
+				<p:column sortBy="#{employee.room.number}" headerText="#{controls.room}">
+					<p:cellEditor>
+	            		<f:facet name="output">
+	            			<h:outputText value="#{employee.room.number}" />
+	            		</f:facet>
+	            		<f:facet name="input"> 
+	            			<h:inputText  value="#{employee.room.number}" styleClass="table-edit" validator="#{employee.validateRoom}" converterMessage="#{msgs.roomValid}">
+	            				
+	            			</h:inputText>
+	            		</f:facet>
+            		</p:cellEditor>
+        		</p:column>
+        		
+        		<p:column sortBy="#{employee.phone}" headerText="#{controls.phone}">
+					<p:cellEditor>
+	            		<f:facet name="output">
+	            			<h:outputText value="#{employee.formatedPhone}" />
+	            		</f:facet>
+	            		<f:facet name="input"> 
+	            			<p:inputText value="#{employee.phone}" styleClass="table-edit" validator="#{employee.validatePhone}" converterMessage="#{msgs.phoneValid}">
+	            				
+	            			</p:inputText>
+	            		</f:facet>
+            		</p:cellEditor>
+        		</p:column>
+                
+                <p:column rendered="#{loginBean.user.role.name == 'admin'}">
+                	<p:rowEditor />       	
+                </p:column>
+                <p:column rendered="#{loginBean.user.role.name == 'admin'}">
+                	<p:commandButton title="#{controls.delete}" icon="ui-icon-trash" styleClass="btn-remove" 
+                       action="#{employeesTableBean.employeesModel.prepareEmployeeForRemove(employee)}" update="employeeTable, :employeesTableForm:confirm"
+                       oncomplete="confirmation.show();" /> 
+                       
+                </p:column>    
+            
+			</p:dataTable>	
+			
+			<h:panelGroup id="confirm">
+			<p:dialog  message="#{msgs.confirmation}" header="#{controls.deleteEmployee}" severity="alert" widgetVar="confirmation" modal="true" >
+						<center>
+							<div class="text-confirm text-bold">
+								<h:outputText value="#{msgs.confirmation}"/>
+							</div>
+							<h:panelGrid columns="2" styleClass="table table-bordered">
+								<h:outputText value="#{controls.lastName}" styleClass="text-bold" />
+								<h:outputText value="#{employeesTableBean.employeesModel.preparedEmployee.lastName}"/>
+								<h:outputText value="#{controls.firstName}" styleClass="text-bold"/>
+								<h:outputText value="#{employeesTableBean.employeesModel.preparedEmployee.firstName}"/>
+								<h:outputText value="#{controls.middleName}" styleClass="text-bold"/>
+								<h:outputText value="#{employeesTableBean.employeesModel.preparedEmployee.middleName}"/>
+								<h:outputText value="#{controls.room}" styleClass="text-bold"/>
+								<h:outputText value="#{employeesTableBean.employeesModel.preparedEmployee.room.number}"/>
+								<h:outputText value="#{controls.phone}" styleClass="text-bold"/>
+								<h:outputText value="#{employeesTableBean.employeesModel.preparedEmployee.phone}"/>
+								
+								
+							</h:panelGrid>
+							<p:commandButton value="#{controls.delete}" update="employeeTable" oncomplete="confirmation.hide()"
+								actionListener="#{employeesTableBean.remove(employeesTableBean.employeesModel.preparedEmployee)}"
+								styleClass="btn btn-confirm"/>
+							<p:commandButton value="#{controls.cancel}" onclick="confirmation.hide()"  styleClass="btn btn-confirm"
+								actionListener="#{employeesTableBean.loadEmployees}" update="employeeTable"/>
+						</center>
+			</p:dialog>	
+			</h:panelGroup>
+		</h:form>
+
+	  		
+	</ui:define>
+ 
+</ui:composition>
+
+</html>

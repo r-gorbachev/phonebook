@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"   
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"      >
+<ui:composition>
+	<ul class="nav nav-list">
+		<li class="nav-header">#{controls.menu}</li>
+        	<li>
+        		<h:link outcome="main.xhtml" value="#{controls.main}"></h:link>
+            </li>
+            <li>
+				<h:link outcome="search.xhtml" value="#{controls.search}"></h:link>
+            </li>
+            
+            <h:panelGroup rendered="#{loginBean.user.role.name == 'admin'}">
+            	<li class="divider"></li>
+	            <li class="nav-header">#{controls.manageEmployees}</li>
+	            <li>
+	            	<h:link outcome="add.xhtml" value="#{controls.addnew}"></h:link>
+	            </li>
+	            <li class="nav-header">#{controls.manageUsers}</li>
+	            <li>
+	            	<h:link outcome="users.xhtml" value="#{controls.users}"></h:link>
+	           	</li>
+            </h:panelGroup>
+            
+    </ul>
+</ui:composition>
+</html>

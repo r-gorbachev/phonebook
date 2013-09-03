@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui" >
+ 
+<ui:composition template="templates/mainTemplate.xhtml">
+    <h:head>
+    	<f:metadata>
+ 			<f:event listener="#{loginBean.requiredLoggedIn}" type="preRenderView"></f:event>
+ 		</f:metadata>
+ 		
+    </h:head>
+	<ui:define name="content">
+		<h:form id="searchForm" class="form-horizontal">
+			
+				<legend>#{controls.searchForm}</legend>
+			<fieldset>
+				<div class="search-controls">
+					
+					<div class="control-group" >
+						<h:outputLabel for="name" value="#{controls.lastName}" class="control-label left"/>
+		  				<div class="controls controls-long">    	 		  			
+    	 		  			<h:selectOneMenu id="nameType" value="#{searchEmployeesBean.nameSearchType}">
+    	 		  				<f:selectItem itemLabel="#{controls.searchStartsWith}" itemValue="1"/>
+    	 		  				<f:selectItem itemLabel="#{controls.searchContains}" itemValue="2"/>
+    	 		  				<f:selectItem itemLabel="#{controls.searchEndsWith}" itemValue="3"/>
+    	 		  			</h:selectOneMenu>
+    	 		  			<h:inputText id="name" value="#{searchEmployeesBean.lastName}" class="input-medium search-query" 
+    	 		  				validator="#{searchEmployeesBean.validateLastName}">
+    	 		  				<f:ajax event="keyup" render="nameError" onevent="hideIfEmpty"/>
+    	 		  			</h:inputText>	  			  			 	 		  			
+     			  		</div>	
+					</div>
+					<div class="alert alert-error" name ="errorMessage">
+    	 		  		<h:message for="name" id="nameError"/>
+ 					</div>
+					<div class="control-group" >
+						<h:outputLabel for="room" value="#{controls.room}" class="control-label left"/>
+		  				<div class="controls controls-long">
+    	 					
+     			  			<h:selectOneMenu id="roomType" value="#{searchEmployeesBean.roomSearchType}">
+		    	 		  		<f:selectItem itemLabel="#{controls.searchStartsWith}" itemValue="1"/>
+		    	 		  		<f:selectItem itemLabel="#{controls.searchContains}" itemValue="2"/>
+		    	 		  		<f:selectItem itemLabel="#{controls.searchEndsWith}" itemValue="3"/>
+		    	 		  	</h:selectOneMenu>
+		    	 		  	<h:inputText id="room" value="#{searchEmployeesBean.roomNumber}" class="input-medium search-query"
+		    	 		  		validator="#{searchEmployeesBean.validateRoom}">
+    	 		  				<f:ajax event="keyup" render="roomError" onevent="hideIfEmpty"/>
+    	 		  			</h:inputText>
+		    	 		  
+    	 		  		</div>
+					</div>
+					<div class="alert alert-error" name ="errorMessage">
+    	 		  			<h:message for="room" id="roomError" />
+ 					</div>
+					<div class="control-group" >
+						<h:outputLabel for="phone" value="#{controls.phone}" class="control-label left"/>
+		  				<div class="controls controls-long">
+    	 					
+     			  			<h:selectOneMenu id="phoneType" value="#{searchEmployeesBean.phoneSearchType}">
+		    	 		  		<f:selectItem itemLabel="#{controls.searchStartsWith}" itemValue="1"/>
+		    	 		  		<f:selectItem itemLabel="#{controls.searchContains}" itemValue="2"/>
+		    	 		  		<f:selectItem itemLabel="#{controls.searchEndsWith}" itemValue="3"/>
+		    	 		  	</h:selectOneMenu>
+		    	 		  	<h:inputText id="phone" value="#{searchEmployeesBean.phone}" class="input-medium search-query"
+		    	 		  		validator="#{searchEmployeesBean.validatePhone}">
+    	 		  				<f:ajax event="keyup" render="phoneError" onevent="hideIfEmpty"/>
+    	 		  			</h:inputText>
+		    	 		  
+    	 		  		</div>
+					</div>
+					<div class="alert alert-error" name ="errorMessage">
+    	 		  		<h:message for="phone" id="phoneError" />
+ 					</div>
+					<div class="control-group" >
+						<h:commandButton value="#{controls.search}" class="btn" >
+							<f:ajax execute="name nameType room roomType phone phoneType" render="searchTable" listener="#{searchEmployeesBean.searchEmployees}"/>
+						</h:commandButton>
+					</div>
+					<div class="alert alert-error" name = "errorMessage">
+						<h:message for="searchForm" />
+					</div> 
+
+
+				</div>
+			</fieldset>
+
+			<h:messages  id="messages" class="alert alert-error error-list" name="errorMessage"/>
+			<p:dataTable id="searchTable" var="employee" value="#{searchEmployeesBean.employeesModel.employees}"
+                 paginator="true" rows="10"  paginatorPosition="bottom"
+                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                 rowsPerPageTemplate="10,15,20" editable="#{loginBean.user.role.name == 'admin'}">
+                 
+            	<p:ajax event="rowEdit" listener="#{searchEmployeesBean.onEdit}" update=":searchForm:messages" />  
+        		<p:ajax event="rowEditCancel" listener="#{searchEmployeesBean.onCancel}" update=":searchForm:messages" />
+                 
+                <f:facet name="header">
+           			#{controls.searchResults}
+        		</f:facet>
+        		
+        		
+        		
+        		<p:column sortBy="#{searchEmployeesBean.employeesModel.getEmployeeSerialNumber(employee)}">
+            		<f:facet name="header">
+                		<h:outputText value="№" />
+            		</f:facet>
+            		<h:outputText value="#{searchEmployeesBean.employeesModel.getEmployeeSerialNumber(employee)}" />
+        		</p:column>
+				
+				
+				<p:column sortBy="#{employee.lastName}" headerText="#{controls.lastName}">
+					<p:cellEditor>
+	            		<f:facet name="output">
+	            			<h:outputText value="#{employee.lastName}" />
+	            		</f:facet>
+	            		<f:facet name="input"> 
+	            			<p:inputText  value="#{employee.lastName}" styleClass="table-edit" validator="#{employee.validateLastName}">
+	            				
+	            			</p:inputText>
+	            				
+	            		</f:facet>
+	            		
+            		</p:cellEditor>
+        		</p:column>
+
+       			<p:column sortBy="#{employee.firstName}" headerText="#{controls.firstName}">
+					<p:cellEditor>
+	            		<f:facet name="output">
+	            			<h:outputText value="#{employee.firstName}" />
+	            		</f:facet>
+	            		<f:facet name="input"> 
+	            			<p:inputText value="#{employee.firstName}" styleClass="table-edit" validator="#{employee.validateFirstName}">
+	            				
+	            			</p:inputText>
+	            		</f:facet>
+            		</p:cellEditor>
+        		</p:column>
+
+
+       			<p:column sortBy="#{employee.middleName}" headerText="#{controls.middleName}">
+					<p:cellEditor>
+	            		<f:facet name="output">
+	            			<h:outputText value="#{employee.middleName}"  />
+	            		</f:facet>
+	            		<f:facet name="input"> 
+	            			<p:inputText value="#{employee.middleName}" styleClass="table-edit" validator="#{employee.validateMiddleName}">
+	            				
+	            			</p:inputText>
+	            		</f:facet>
+            		</p:cellEditor>
+        		</p:column>
+				
+				<p:column sortBy="#{employee.room.number}" headerText="#{controls.room}">
+					<p:cellEditor>
+	            		<f:facet name="output">
+	            			<h:outputText value="#{employee.room.number}" />
+	            		</f:facet>
+	            		<f:facet name="input"> 
+	            			<h:inputText  value="#{employee.room.number}" styleClass="table-edit" validator="#{employee.validateRoom}" converterMessage="#{msgs.roomValid}">
+	            				
+	            			</h:inputText>
+	            		</f:facet>
+            		</p:cellEditor>
+        		</p:column>
+        		
+        		<p:column sortBy="#{employee.phone}" headerText="#{controls.phone}">
+					<p:cellEditor>
+	            		<f:facet name="output">
+	            			<h:outputText value="#{employee.formatedPhone}" />
+	            		</f:facet>
+	            		<f:facet name="input"> 
+	            			<p:inputText value="#{employee.phone}" styleClass="table-edit" validator="#{employee.validatePhone}" converterMessage="#{msgs.phoneValid}">
+	            				
+	            			</p:inputText>
+	            		</f:facet>
+            		</p:cellEditor>
+        		</p:column>
+                
+                <p:column rendered="#{loginBean.user.role.name == 'admin'}">
+                	<p:rowEditor />  
+                </p:column>
+              	<p:column rendered="#{loginBean.user.role.name == 'admin'}">
+                	<p:commandButton title="#{controls.delete}" icon="ui-icon-trash" styleClass="btn-remove" 
+                       action="#{searchEmployeesBean.employeesModel.prepareEmployeeForRemove(employee)}" update="searchTable, :searchForm:confirm"
+                       oncomplete="confirmation.show();" /> 
+          	
+                </p:column>
+            
+			</p:dataTable>	
+			<h:panelGroup id="confirm">
+			<p:dialog  message="#{msgs.confirmation}" header="#{controls.deleteEmployee}" severity="alert" widgetVar="confirmation" modal="true" >
+						<center>
+							<div class="text-confirm text-bold">
+								<h:outputText value="#{msgs.confirmation}"/>
+							</div>
+							<h:panelGrid columns="2" styleClass="table table-bordered">
+								<h:outputText value="#{controls.lastName}" styleClass="text-bold" />
+								<h:outputText value="#{searchEmployeesBean.employeesModel.preparedEmployee.lastName}"/>
+								<h:outputText value="#{controls.firstName}" styleClass="text-bold"/>
+								<h:outputText value="#{searchEmployeesBean.employeesModel.preparedEmployee.firstName}"/>
+								<h:outputText value="#{controls.middleName}" styleClass="text-bold"/>
+								<h:outputText value="#{searchEmployeesBean.employeesModel.preparedEmployee.middleName}"/>
+								<h:outputText value="#{controls.room}" styleClass="text-bold"/>
+								<h:outputText value="#{searchEmployeesBean.employeesModel.preparedEmployee.room.number}"/>
+								<h:outputText value="#{controls.phone}" styleClass="text-bold"/>
+								<h:outputText value="#{searchEmployeesBean.employeesModel.preparedEmployee.phone}"/>
+								
+								
+							</h:panelGrid>
+							<p:commandButton value="#{controls.delete}" update="searchTable" oncomplete="confirmation.hide()"
+								actionListener="#{searchEmployeesBean.remove(searchEmployeesBean.employeesModel.preparedEmployee)}"
+								styleClass="btn btn-confirm"/>
+							<p:commandButton value="#{controls.cancel}" onclick="confirmation.hide()"  styleClass="btn btn-confirm"
+							actionListener="#{searchEmployeesBean.searchEmployees}" update="searchTable"/>
+						</center>
+			</p:dialog>	
+			</h:panelGroup>
+			
+		</h:form>	
+	  		
+	</ui:define>
+ 
+</ui:composition>
+
+</html>

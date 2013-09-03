@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+      
+    <h:body>
+	    <ui:composition>
+           	<div class="navbar-inner">
+               	<div class="container-fluid">
+					<a class="brand pull-left" href="">#{controls.appName}</a>
+					<h:panelGroup rendered="#{loginBean.loggedIn}">
+               			<h:form class="pull-right navbar-text">
+							<h:commandLink action="#{loginBean.logout}" target="_self" value="#{controls.logout}"/>
+						</h:form>
+						<p class="navbar-text pull-right">
+							#{controls.loggedAsTitle}
+							<span class="label label-success">
+								<h:outputFormat value="#{loginBean.user.name} "/>
+							</span>
+							|&nbsp;
+               			</p>		
+					</h:panelGroup>			
+				</div>
+			</div>
+		</ui:composition>
+    </h:body>
+</html>

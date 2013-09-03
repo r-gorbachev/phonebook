@@ -1,0 +1,61 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"  
+	>
+
+<ui:composition template="templates/commonTemplate.xhtml">
+<h:head>
+    			<f:metadata>
+ 				<f:event listener="#{loginBean.requiredLoggedOut}" type="preRenderView"/>
+				</f:metadata>
+</h:head>
+    	<ui:define name="content">
+			<div class="container">
+	  			<h:form id="loginForm" class="form-common form-horizontal">
+					<fieldset>
+						<legend>
+							<h:outputText value="#{msgs.loginGreetins}"/>
+							<h:link outcome="registrate.xhtml" value="#{controls.registrate}" />
+						</legend>
+	  				
+		  				<div class="control-group">	
+		  					<h:outputLabel for="emailField" value="#{controls.email}" class="control-label"/>
+		  					<div class="controls">
+    	 		  				<h:inputText id="emailField" value="#{loginBean.email}" class="input-block-level" required="true" 
+    	 		  				requiredMessage="#{msgs.emailReq}" validatorMessage="#{msgs.emailValid}">
+    	 		  					<f:validateRegex pattern="([\w]+([._-]?[\w])*)+@([\w]+([.-]?[\w])*)+.[a-zA-Z]{2,}" />
+	    	 		  				<f:validateLength minimum="6" maximum="32"/>
+    	 		  				</h:inputText>
+     			  			</div>
+     		  				<div id="emailMessage" class="alert alert-error" name = "errorMessage">
+								<h:message for="emailField" />
+							</div>
+     		  		
+     		  				<h:outputLabel for="passwordField" value="#{controls.password}" class="control-label"/>
+     		  				<div class="controls">
+        						<h:inputSecret id="passwordField" value="#{loginBean.password}" class="input-block-level " required="true" 
+        						requiredMessage="#{msgs.passReq}" validatorMessage="#{msgs.passValid}">
+        							<f:validateRegex pattern="[\S]{4,}" />
+        						</h:inputSecret>
+        					</div>
+        					<div id="passwordMessage" class="alert alert-error" name = "errorMessage">
+								<h:message for="passwordField" />
+							</div>
+        				</div>
+        				<h:commandButton id="loginBtn" action="#{loginBean.login}" class="btn btn-primary" value="#{controls.singinBtn}"/>
+						<br/><br/>
+						<div id="loginMessage" class="alert alert-error" name = "errorMessage" >
+							<h:message for="loginBtn" />
+						</div>
+					</fieldset>
+				</h:form>	
+			</div>
+    	</ui:define>
+</ui:composition>
+</html>

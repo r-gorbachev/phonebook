@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui" >
+ 
+<ui:composition template="templates/mainTemplate.xhtml">
+    <h:head>
+    	<f:metadata>
+ 			<f:event listener="#{loginBean.requiredAdmin}" type="preRenderView"></f:event>
+ 		</f:metadata>
+    </h:head>
+	<ui:define name="content">
+				
+		
+		<h:form id="usersForm" class="form-horizontal">
+		
+			
+        	<h:messages  id="messages" class="alert alert-error error-list" name="errorMessage"/>
+        	
+			<p:dataTable id="usersTable" var="user" value="#{usersTableBean.users}"
+        	     paginator="true" rows="10"  paginatorPosition="bottom"
+                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                 rowsPerPageTemplate="10,15,20">
+             
+                 
+                <f:facet name="header">
+           			#{controls.users}
+        		</f:facet>
+        			
+        		<p:column sortBy="#{usersTableBean.getSerialNumber(user)}">
+            		<f:facet name="header">
+                		<h:outputText value="№" />
+            		</f:facet>
+            		<h:outputText value="#{usersTableBean.getSerialNumber(user)}" />
+        		</p:column>
+						
+				<p:column sortBy="#{user.name}">
+					<f:facet name="header">
+                		<h:outputText value="#{controls.name}" />
+            		</f:facet>
+            		<h:outputText value="#{user.name}" />
+        		</p:column>
+
+       			<p:column sortBy="#{user.email}">
+					<f:facet name="header">
+                		<h:outputText value="#{controls.email}" />
+            		</f:facet>
+            		<h:outputText value="#{user.email}" />
+        		</p:column>
+     			
+     			<p:column sortBy="#{user.role.name}" >
+					<f:facet name="header">
+                		<h:outputText value="#{controls.role}" />
+            		</f:facet>
+            		<h:outputText value="#{user.role.name}" />
+        		</p:column>
+           
+              	<p:column >
+              		<p:commandButton title="#{controls.delete}" icon="ui-icon-trash" styleClass="btn-remove"
+              			action="#{usersTableBean.prepareUserForRemove(user)}" oncomplete="confirmation.show();"
+              		 	update="usersTable"  rendered="#{user.role.name != 'admin'}"/>
+              			
+				</p:column>
+			
+			</p:dataTable>	
+            <p:confirmDialog  message="#{msgs.confirmation}" header="#{msgs.deleteUser}" severity="alert" widgetVar="confirmation">
+						<center>
+							<p:commandButton value="#{controls.delete}" update="usersTable" oncomplete="confirmation.hide()"
+								actionListener="#{usersTableBean.removeUser(usersTableBean.preparedUser)}" styleClass="btn btn-confirm"/>
+							<p:commandButton value="#{controls.cancel}" onclick="confirmation.hide()"  styleClass="btn btn-confirm" 
+							actionListener="#{usersTableBean.loadUsers}" update="usersTable"/>
+						</center>
+			</p:confirmDialog>	
+ 
+			
+		</h:form>
+
+	  		
+	</ui:define>
+ 
+</ui:composition>
+
+</html>
